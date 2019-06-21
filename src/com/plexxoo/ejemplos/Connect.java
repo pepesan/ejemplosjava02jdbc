@@ -1,12 +1,14 @@
 package com.plexxoo.ejemplos;
+
 import java.sql.*;
 
 public class Connect
 {
 	static Connection CONN = null;
-	static String USERNAME = "root";
-    static String PASSWORD = "root";
-    static String URL = "jdbc:mysql://localhost:3306/sakila";
+	public final static String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
+	public final static String USERNAME = "root";
+	public final static String PASSWORD = "root";
+	public final static String URL = "jdbc:mysql://localhost:3306/sakila";
 	private static long LAST_INSERT_ID;
 	private static String TABLE="language";
 	private static String NAME="NAME";
@@ -19,7 +21,7 @@ public class Connect
         try
         {
             
-            Class.forName ("com.mysql.cj.jdbc.Driver")
+            Class.forName (DRIVER_NAME)
             .newInstance ();
             CONN = DriverManager
             		.getConnection (URL, USERNAME, PASSWORD);
@@ -33,6 +35,13 @@ public class Connect
             updateData();
             deleteData();
         }
+		catch (SQLException e)
+		{
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			System.out.println(e.getClass());
+			System.out.println ("Ha tenido un problema con el Servidor SQL");
+		}
         catch (Exception e)
         {
         	System.out.println(e.getMessage());
@@ -54,7 +63,8 @@ public class Connect
         }
     }
     static void createData(){
-    	 String sql = "INSERT into "+TABLE+" ("+NAME+","+DATETIME+") VALUES(?,?)";
+    	 String sql = "INSERT into "+TABLE+" ("+NAME+","+DATETIME+
+				 ") VALUES(?,?)";
     	  PreparedStatement prest;
 		try {
 			prest = CONN.prepareStatement(sql);
@@ -66,6 +76,7 @@ public class Connect
 			int autoIncKeyFromFunc = -1;
 			if (rs.next()) {
 				autoIncKeyFromFunc = rs.getInt(1);
+				LAST_INSERT_ID = autoIncKeyFromFunc;
 			} else {
 				// throw an exception from here
 			}
@@ -89,7 +100,8 @@ public class Connect
 
     }
     static void updateData() throws SQLException{
-    	String sql = "UPDATE "+TABLE+" SET "+NAME+" = ? WHERE "+ID+" = ?";
+    	String sql = "UPDATE "+TABLE+" SET "+NAME+
+				" = ? WHERE "+ID+" = ?";
     	PreparedStatement prest;
 		try {
 			prest = CONN.prepareStatement(sql);
@@ -99,7 +111,10 @@ public class Connect
 		    	System.out.println("Updating Successfully!");
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
+
     	  
 
     }
@@ -112,6 +127,9 @@ public class Connect
 		    	prest.executeUpdate();
 		    	System.out.println("Deleting Successfully!");
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
     	  
