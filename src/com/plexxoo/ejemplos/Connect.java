@@ -5,7 +5,7 @@ public class Connect
 {
 	static Connection CONN = null;
 	static String USERNAME = "root";
-    static String PASSWORD = "";
+    static String PASSWORD = "root";
     static String URL = "jdbc:mysql://localhost:3306/sakila";
 	private static long LAST_INSERT_ID;
 	private static String TABLE="language";
@@ -19,14 +19,14 @@ public class Connect
         try
         {
             
-            Class.forName ("com.mysql.jdbc.Driver")
+            Class.forName ("com.mysql.cj.jdbc.Driver")
             .newInstance ();
             CONN = DriverManager
             		.getConnection (URL, USERNAME, PASSWORD);
             System.out.println 
             ("Database CONNection established");
             String sql="SELECT * FROM "+TABLE;
-            Statement statement = CONN.createStatement();
+			Statement statement = CONN.createStatement();
             ResultSet result = statement.executeQuery(sql);
             displayResults(result);
             createData();
@@ -61,6 +61,15 @@ public class Connect
 			prest.setString(1, "España");
 			prest.setString(2,"2012-02-01 18:00:00" );
 			int count = prest.executeUpdate();
+			ResultSet rs = null;
+			rs = prest.executeQuery("SELECT LAST_INSERT_ID()");
+			int autoIncKeyFromFunc = -1;
+			if (rs.next()) {
+				autoIncKeyFromFunc = rs.getInt(1);
+			} else {
+				// throw an exception from here
+			}
+			/*
 			ResultSet generatedKeys = null;
 	    		generatedKeys = prest.getGeneratedKeys();
 	        if (generatedKeys.next()) {
@@ -69,7 +78,9 @@ public class Connect
 	        } else {
 	            throw new SQLException("Creating user failed, no generated key obtained.");
 	        }
-	    	System.out.println(count + "row(s) affected");
+
+			 */
+	    	System.out.println(autoIncKeyFromFunc + "ID del último insert");
 	    	
 		} catch (SQLException e) {
 			e.printStackTrace();
