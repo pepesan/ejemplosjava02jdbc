@@ -107,8 +107,14 @@ public class Connect
 			prest = CONN.prepareStatement(sql);
 			prest.setString(1,"ESHpaña");
 	    		prest.setLong(2,LAST_INSERT_ID);
-		    	prest.executeUpdate();
-		    	System.out.println("Updating Successfully!");
+		    	int count = prest.executeUpdate();
+		    	if(count==1){
+		    		// ha ido todo guay
+					System.out.println("Updating Successfully!");
+				}else{
+					// no ha ido todo guay
+				}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}catch (Exception e) {
@@ -132,7 +138,7 @@ public class Connect
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-    	  
+
 
     }
     static void displayResults(ResultSet r) 
