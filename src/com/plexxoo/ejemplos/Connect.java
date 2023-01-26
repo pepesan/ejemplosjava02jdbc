@@ -27,10 +27,15 @@ public class Connect
             		.getConnection (URL, USERNAME, PASSWORD);
             System.out.println 
             ("Database CONNection established");
+
             String sql="SELECT * FROM "+TABLE;
 			Statement statement = CONN.createStatement();
             ResultSet result = statement.executeQuery(sql);
+
             displayResults(result);
+			statement = CONN.createStatement();
+			result = statement.executeQuery(sql);
+			displayResultsGetters(result);
             createData();
             updateData();
             deleteData();
@@ -160,4 +165,42 @@ public class Connect
 	    	  }
 	    	}
     }
+	static void displayResultsGetters(ResultSet r)
+			throws SQLException {
+		ResultSetMetaData rmeta = r.getMetaData();
+		int numColumns=rmeta.getColumnCount();
+		for(int i=1;i<=numColumns;++i) {
+			if(i<numColumns)
+				System.out.print(rmeta.getColumnName(i)+" | ");
+			else
+				System.out.println(rmeta.getColumnName(i));
+		}
+		while(r.next()){
+			Boolean conSalida = false;
+			String salida = "";
+			for(int i=1;i<=numColumns;++i) {
+				if(i<numColumns){
+					conSalida = true;
+				} else{
+					conSalida = false;
+				}
+				switch (i){
+					case 1:
+						salida = ""+ r.getInt(1);
+						break;
+					case 2:
+						salida = ""+ r.getString(2);
+						break;
+					case 3:
+						salida = ""+ r.getTimestamp(3);
+				}
+				System.out.print(salida);
+				if (conSalida){
+					System.out.print(" | ");
+				}else {
+					System.out.println("");
+				}
+			}
+		}
+	}
 }

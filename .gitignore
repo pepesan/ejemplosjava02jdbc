@@ -7,3 +7,6 @@ bin
 target
 libs
 ejemplosjava02jdbc.iml
+database-sample/sakila-data.sql
+database-sample/sakila-schema.sql
+database-sample/sakila.mwb
