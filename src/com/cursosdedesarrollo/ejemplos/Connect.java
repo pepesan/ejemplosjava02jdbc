@@ -1,4 +1,4 @@
-package com.plexxoo.ejemplos;
+package com.cursosdedesarrollo.ejemplos;
 
 import java.sql.*;
 
