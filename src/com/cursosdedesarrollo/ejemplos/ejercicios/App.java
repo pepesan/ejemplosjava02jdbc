@@ -7,6 +7,8 @@ import com.cursosdedesarrollo.ejemplos.ejercicios.repositories.ClienteDAODDBBImp
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class App {
     public final static String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
@@ -55,6 +57,41 @@ public class App {
             System.out.println(cliente);
             conexion.getConnection().close();
             System.out.println("Conection closed");
+
+            // Convertir a Stream
+            System.out.println(listado);
+            Stream<Cliente> stream =listado.stream();
+            // Uso de Lambdas o Arrow Functions
+            // ForEach para imprimir uno a uno
+            stream.forEach(System.out::println);
+            //Filter
+            stream =listado.stream();
+            stream
+                .filter(c -> c.getDir().equals("Toledo"))
+                .forEach(System.out::println);
+            // Map
+            stream =listado.stream();
+            stream
+                .map(c -> c.getName())
+                .forEach(System.out::println);
+            // Collect
+            stream =listado.stream();
+            List<Cliente> litadoFiltrado =
+                    stream
+                            .filter(c -> c.getDir().equals("Toledo"))
+                            .collect(Collectors.toList());
+            System.out.println(litadoFiltrado);
+            // All together
+            stream =listado.stream();
+            stream
+                // filtramos los clientes de Toledo
+                .filter(c -> c.getDir().equals("Toledo"))
+                // cogemos sólo los nombres
+                .map(c -> c.getName())
+                // con un foreach los imprimimos
+                .forEach(System.out::println);
+            System.out.println("fin del stream");
+
 
 
         } catch (ClassNotFoundException e) {
