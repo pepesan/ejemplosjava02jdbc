@@ -20,9 +20,12 @@ public class Connect
 
         try
         {
-            
+            // Realizar la carga del Driver
             Class.forName (DRIVER_NAME)
             .newInstance ();
+			// Establecer la conexión a la BBDD
+			// URL, usuario, contraseña
+			// devuelve Connection CONN
             CONN = DriverManager
             		.getConnection (URL, USERNAME, PASSWORD);
             System.out.println 
