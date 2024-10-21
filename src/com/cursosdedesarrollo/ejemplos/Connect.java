@@ -8,16 +8,13 @@ public class Connect
 	public final static String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
 	public final static String USERNAME = "root";
 	public final static String PASSWORD = "root";
-	public final static String URL = "jdbc:mysql://localhost:3306/sakila";
+	public final static String URL = "jdbc:mysql://localhost:3306/test";
 	private static long LAST_INSERT_ID;
 	private static String TABLE="language";
 	private static String NAME="NAME";
 	private static String DATETIME="last_update";
 	private static String ID="language_ID";
-    public static void main (String[] args)
-    {
-        
-
+    public static void main (String[] args){
         try
         {
             // Realizar la carga del Driver
