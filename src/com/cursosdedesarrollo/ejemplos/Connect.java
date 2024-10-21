@@ -10,10 +10,10 @@ public class Connect
 	public final static String PASSWORD = "root";
 	public final static String URL = "jdbc:mysql://localhost:3306/test";
 	private static long LAST_INSERT_ID;
-	private static String TABLE="language";
-	private static String NAME="NAME";
-	private static String DATETIME="last_update";
-	private static String ID="language_ID";
+	private final static String TABLE="language";
+	private final static String NAME="NAME";
+	private final static String DATETIME="last_update";
+	private final static String ID="language_ID";
     public static void main (String[] args){
         try
         {
@@ -37,6 +37,8 @@ public class Connect
 			result = statement.executeQuery(sql);
 			displayResultsGetters(result);
             createData();
+			selectData();
+			getLanguageById();
             updateData();
             deleteData();
         }
@@ -60,14 +62,28 @@ public class Connect
             {
                 try
                 {
-                    CONN.close ();
+                    CONN.close();
                     System.out.println ("Database Connection terminated");
                 }
                 catch (Exception e) { /* ignore close errors */ }
             }
         }
     }
-    static void createData(){
+
+	private static void selectData() {
+		String sql="SELECT * FROM "+TABLE + " Where "+ ID + "=" + LAST_INSERT_ID;
+		PreparedStatement prest;
+		try{
+			prest = CONN.prepareStatement(sql);
+			//prest.setLong(1, LAST_INSERT_ID);
+			ResultSet result = prest.executeQuery(sql);
+			displayResults(result);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	static void createData(){
     	 String sql = "INSERT into "+TABLE+" ("+NAME+","+DATETIME+
 				 ") VALUES(?,?)";
     	  PreparedStatement prest;
@@ -76,6 +92,7 @@ public class Connect
 			prest.setString(1, "España");
 			prest.setString(2,"2012-02-01 18:00:00" );
 			int count = prest.executeUpdate();
+			System.out.println("Count: " + count);
 			ResultSet rs = null;
 			rs = prest.executeQuery("SELECT LAST_INSERT_ID()");
 			int autoIncKeyFromFunc = -1;
@@ -96,7 +113,7 @@ public class Connect
 	        }
 
 			 */
-	    	System.out.println(autoIncKeyFromFunc + "ID del último insert");
+	    	System.out.println("ID del último insert: "+ autoIncKeyFromFunc);
 	    	
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,14 +128,14 @@ public class Connect
 		try {
 			prest = CONN.prepareStatement(sql);
 			prest.setString(1,"ESHpaña");
-	    		prest.setLong(2,LAST_INSERT_ID);
-		    	int count = prest.executeUpdate();
-		    	if(count==1){
-		    		// ha ido todo guay
-					System.out.println("Updating Successfully!");
-				}else{
-					// no ha ido todo guay
-				}
+			prest.setLong(2,LAST_INSERT_ID);
+		    int count = prest.executeUpdate();
+		    if(count==1){
+		    	// ha ido todo guay
+				System.out.println("Updating Successfully!");
+			}else{
+				// no ha ido todo guay
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -134,9 +151,9 @@ public class Connect
     	PreparedStatement prest;
 		try {
 			prest = CONN.prepareStatement(sql);
-		    	prest.setLong(1,LAST_INSERT_ID);
-		    	prest.executeUpdate();
-		    	System.out.println("Deleting Successfully!");
+		    prest.setLong(1,LAST_INSERT_ID);
+		    prest.executeUpdate();
+		    System.out.println("Deleting Successfully!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -151,11 +168,11 @@ public class Connect
 	    	ResultSetMetaData rmeta = r.getMetaData();
 	    	int numColumns=rmeta.getColumnCount();
 	    	for(int i=1;i<=numColumns;++i) {
-	    	 if(i<numColumns)
-	    	  System.out.print(rmeta.getColumnName(i)+" | ");
-	    	 else
-	    	   System.out.println(rmeta.getColumnName(i));
-	    	 }
+	    	 	if(i<numColumns)
+	    	  		System.out.print(rmeta.getColumnName(i)+" | ");
+				else
+	    	   		System.out.println(rmeta.getColumnName(i));
+	    	}
 	    	while(r.next()){
 	    	  for(int i=1;i<=numColumns;++i) {
 	    	   if(i<numColumns)
@@ -201,6 +218,34 @@ public class Connect
 					System.out.println("");
 				}
 			}
+		}
+	}
+	public static void getLanguageById() {
+		String query = "SELECT "+ID+", "+NAME+", "+DATETIME+" FROM "+TABLE+" WHERE "+ID+" = ?";
+
+		try (PreparedStatement preparedStatement = CONN.prepareStatement(query)) {
+
+			// Establecer el valor del parámetro de la consulta
+			preparedStatement.setLong(1, LAST_INSERT_ID);
+
+			// Ejecutar la consulta
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			// Procesar los resultados
+			if (resultSet.next()) {
+				int id = resultSet.getInt("language_id");
+				String name = resultSet.getString("name");
+				java.sql.Timestamp lastUpdate = resultSet.getTimestamp("last_update");
+
+				System.out.println("ID: " + id);
+				System.out.println("Name: " + name);
+				System.out.println("Last Update: " + lastUpdate);
+			} else {
+				System.out.println("No se encontró el lenguaje con ID: " + LAST_INSERT_ID);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
