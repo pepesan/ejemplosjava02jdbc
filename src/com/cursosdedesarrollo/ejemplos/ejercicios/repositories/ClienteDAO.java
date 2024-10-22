@@ -13,7 +13,7 @@ public interface ClienteDAO {
     // findByID (devuelve un objeto cliente pasando un id)
     public Cliente findByID(Long id) throws SQLException;
     // update (dado un id cambia los datos de un registro),
-    public Cliente update(Long id, Cliente cliente) throws SQLException;
+    public Cliente updateById(Long id, Cliente cliente) throws SQLException;
     // delete (borra un registro pasando un id),
-    public Cliente delete(Long id) throws SQLException;
+    public Cliente deleteById(Long id) throws SQLException;
 }

@@ -84,7 +84,7 @@ public class ClienteDAODDBBImpl implements ClienteDAO{
     }
 
     @Override
-    public Cliente update(Long id, Cliente cliente) throws SQLException {
+    public Cliente updateById(Long id, Cliente cliente) throws SQLException {
         String sql = "UPDATE "+TABLE+" SET "+NAME+
                 " = ?, "+DIR+" = ?, "+TLF+" = ? WHERE "+ID+" = ?";
         PreparedStatement prest;
@@ -104,7 +104,7 @@ public class ClienteDAODDBBImpl implements ClienteDAO{
     }
 
     @Override
-    public Cliente delete(Long id) throws SQLException {
+    public Cliente deleteById(Long id) throws SQLException {
         Cliente cliente = findByID(id);
         if (cliente.getId()>0){
             String sql = "DELETE from "+TABLE+" WHERE "+ID+" = ?";

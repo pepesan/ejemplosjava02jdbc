@@ -49,11 +49,11 @@ public class App {
             cliente.setName("Natalia de la Hoz");
             cliente.setDir("Toledo");
             cliente.setTlf("92456789");
-            cliente = clienteDAO.update(cliente.getId(), cliente);
+            cliente = clienteDAO.updateById(cliente.getId(), cliente);
             System.out.println(cliente);
 
             // Borrado del objeto por su ID
-            cliente = clienteDAO.delete(cliente.getId());
+            cliente = clienteDAO.deleteById(cliente.getId());
             System.out.println(cliente);
             conexion.getConnection().close();
             System.out.println("Conection closed");
